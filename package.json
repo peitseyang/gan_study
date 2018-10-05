@@ -1,0 +1,19 @@
+{
+  "name": "gan_study",
+  "version": "1.0.0",
+  "description": "study for gan",
+  "main": "main.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/peitseyang/gan_study.git"
+  },
+  "author": "AlexYang",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/peitseyang/gan_study/issues"
+  },
+  "homepage": "https://github.com/peitseyang/gan_study#readme"
+}
