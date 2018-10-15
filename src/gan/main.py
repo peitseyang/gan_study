@@ -7,9 +7,10 @@ import torchvision.utils as vutils
 import numpy as np
 from torch.autograd import Variable
 import matplotlib.pyplot as plt
+import time
 
 parser = argparse.ArgumentParser()
-parser.add_argument('--data_root', type=str, default='../../data/celebA/img_align_celeba')
+parser.add_argument('--data_root', type=str, default='/Users/alexyang/Desktop/MachineLearning/GAN_study/data/celebA/')
 parser.add_argument('--workers', type=int, default=1)
 parser.add_argument('--batch_size', type=int, default=64)
 parser.add_argument('--img_size', type=int, default=64, help='size of each image dimension')
@@ -42,57 +43,60 @@ print_batch = next(iter(dataloader))
 plt.figure(figsize=(8,8))
 plt.axis("off")
 plt.title("Images")
-plt.imshow(np.transpose(vutils.make_grid(real_batch[0].to("cpu")[:64], padding=2, normalize=True).cpu(),(1,2,0)))
+plt.imshow(np.transpose(vutils.make_grid(print_batch[0].to("cpu")[:64], padding=2, normalize=True).cpu(),(1,2,0)))
+plt.show()
 
-class Generator(nn.Module):
-    def __init__(self):
-        super(Generator, self).__init__()
+img_shape = (opt.channels, opt.img_size, opt.img_size)
 
-        def block(in_feat, out_feat, normalize=True):
-            layers = [nn.Linear(in_feat, out_feat)]
-            if normalize:
-                layers.append(nn.BatchNorm1d(out_feat, 0.8))
-            layers.append(nn.LeakyReLU(0.2, inplace=True))
-            return layers
+# class Generator(nn.Module):
+#     def __init__(self):
+#         super(Generator, self).__init__()
 
-        self.model = nn.Sequential(
-            *block(opt.latent_dim, 128, normalize=False),
-            *block(128, 256),
-            *block(256, 512),
-            *block(512, 1024),
-            nn.Linear(1024, int(np.prod(img_shape))),
-            nn.Tanh()
-        )
+#         def block(in_feat, out_feat, normalize=True):
+#             layers = [nn.Linear(in_feat, out_feat)]
+#             if normalize:
+#                 layers.append(nn.BatchNorm1d(out_feat, 0.8))
+#             layers.append(nn.LeakyReLU(0.2, inplace=True))
+#             return layers
 
-    def forward(self, z):
-        img = self.model(z)
-        img = img.view(img.size(0), *img_shape)
-        return img
+#         self.model = nn.Sequential(
+#             *block(opt.latent_dim, 128, normalize=False),
+#             *block(128, 256),
+#             *block(256, 512),
+#             *block(512, 1024),
+#             nn.Linear(1024, int(np.prod(img_shape))),
+#             nn.Tanh()
+#         )
 
-class Discriminator(nn.Module):
-    def __init__(self):
-        super(Discriminator, self).__init__()
+#     def forward(self, z):
+#         img = self.model(z)
+#         img = img.view(img.size(0), *img_shape)
+#         return img
 
-        self.model = nn.Sequential(
-            nn.Linear(int(np.prod(img_shape)), 512),
-            nn.LeakyReLU(0.2, inplace=True),
-            nn.Linear(512, 256),
-            nn.LeakyReLU(0.2, inplace=True),
-            nn.Linear(256, 1),
-            nn.Sigmoid()
-        )
+# class Discriminator(nn.Module):
+#     def __init__(self):
+#         super(Discriminator, self).__init__()
 
-    def forward(self, img):
-        img_flat = img.view(img.size(0), -1)
-        validity = self.model(img_flat)
+#         self.model = nn.Sequential(
+#             nn.Linear(int(np.prod(img_shape)), 512),
+#             nn.LeakyReLU(0.2, inplace=True),
+#             nn.Linear(512, 256),
+#             nn.LeakyReLU(0.2, inplace=True),
+#             nn.Linear(256, 1),
+#             nn.Sigmoid()
+#         )
 
-        return validity
+#     def forward(self, img):
+#         img_flat = img.view(img.size(0), -1)
+#         validity = self.model(img_flat)
 
-generator = Generator().cuda()
-discriminator = Discriminator().cuda()
-loss = nn.CrossEntropyLoss().cuda() # (?) BCELoss()
-generator_Optimizer = torch.optim.Adam(generator.parameters(), lr=opt.lr, betas=(opt.b1, opt.b2))
-discriminator_Optimizer = torch.optim.Adam(discriminator.parameters(), lr=opt.lr, betas=(opt.b1, opt.b2))
+#         return validity
+
+# generator = Generator().cuda()
+# discriminator = Discriminator().cuda()
+# loss = nn.CrossEntropyLoss().cuda() # (?) BCELoss()
+# generator_Optimizer = torch.optim.Adam(generator.parameters(), lr=opt.lr, betas=(opt.b1, opt.b2))
+# discriminator_Optimizer = torch.optim.Adam(discriminator.parameters(), lr=opt.lr, betas=(opt.b1, opt.b2))
 
 # for epoch in range(opt.n_epochs):
 #     for i, data in enumerate(dataloader, 0):
