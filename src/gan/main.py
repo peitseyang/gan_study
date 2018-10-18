@@ -11,7 +11,7 @@ import matplotlib.pyplot as plt
 import time
 
 parser = argparse.ArgumentParser()
-parser.add_argument('--data_root', type=str, default='/home/csie-owob/alexyang/doc/GAN_study/data/celebA/')
+parser.add_argument('--data_root', type=str, default='/home/csie-owob/alexyang/doc/gan_study/data/celebA/')
 parser.add_argument('--workers', type=int, default=1)
 parser.add_argument('--batch_size', type=int, default=64)
 parser.add_argument('--img_size', type=int, default=64, help='size of each image dimension')
