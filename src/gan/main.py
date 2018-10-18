@@ -99,7 +99,7 @@ loss = nn.CrossEntropyLoss().cuda() # (?) BCELoss()
 generator_Optimizer = torch.optim.Adam(generator.parameters(), lr=opt.lr, betas=(opt.b1, opt.b2))
 discriminator_Optimizer = torch.optim.Adam(discriminator.parameters(), lr=opt.lr, betas=(opt.b1, opt.b2))
 
-for epoch in range(opt.n_epochs):
+for epoch in range(opt.epochs):
     for i, (imgs, _) in enumerate(dataloader, 0):
 
         # Adversarial ground truths
